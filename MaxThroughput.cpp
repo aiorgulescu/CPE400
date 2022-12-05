@@ -1,6 +1,15 @@
-#include "MaxThroughput.h"
+#include "MaxThroughput.hpp"
 
-MaxThroughput::MaxThroughput(int n, int bits){
+using namespace std;
+
+/*
+Constructor for the class. Initialize all the class members.
+@param n Number of nodes
+@param biss Number of bits
+@return Nothing
+*/
+MaxThroughput::MaxThroughput(int n, int bits)
+{
     numNodes = n;
     totalBits = bits;
     visited = new bool[numNodes];
@@ -11,12 +20,20 @@ MaxThroughput::MaxThroughput(int n, int bits){
         visited[i] = false;
     }
 }
-
+/*
+Destructor
+@return Nothing
+*/
 MaxThroughput::~MaxThroughput() {}
-
-void MaxThroughput::loadData(string fileName) {
+/*
+Load the file data that contains the adjacency matrix and other network data
+@param fileName The name of the file to load
+@return Nothing
+*/
+void MaxThroughput::loadData(string fileName)
+{
     ifstream myFile(fileName);
-    
+
     string line;
 
     if (!myFile)
@@ -36,29 +53,36 @@ void MaxThroughput::loadData(string fileName) {
             vector<int> currLine{vertA, vertB, bandwidth, queueDelay};
             paths.push_back(currLine);
         }
-        
     }
 
     myFile.close();
-
 }
-
-void MaxThroughput::calculateThroughput() {
+/*
+This function calculates the max throughput for the given network
+@return Nothing
+*/
+void MaxThroughput::calculateThroughput()
+{
     for (int i = 0; i < paths.size(); i++)
     {
-       double delay = paths[i][3] * ((totalBits / paths[i][2]) - 1);
+        double delay = paths[i][3] * ((totalBits / paths[i][2]) - 1);
 
-       double totalTimeToSendBits = (totalBits / paths[i][2]) + delay;
+        double totalTimeToSendBits = (totalBits / paths[i][2]) + delay;
 
-       double throughput = totalBits / totalTimeToSendBits;
+        double throughput = totalBits / totalTimeToSendBits;
 
-       paths[i].push_back(int(throughput));
+        paths[i].push_back(int(throughput));
 
-       adj[paths[i][0]][paths[i][1]] = paths[i][4];
-       
+        adj[paths[i][0]][paths[i][1]] = paths[i][4];
     }
 }
-
+/*
+Traverses the network of nodes and finds all the paths using breadth first search
+@param src The source node to begin searching from
+@param dest The destination node that we want to reach
+@param index The current position in the network
+@return Nothing
+*/
 void MaxThroughput::findAllPaths(int src, int dest, int index)
 {
     visited[src] = true;
@@ -88,19 +112,31 @@ void MaxThroughput::findAllPaths(int src, int dest, int index)
     index--;
     visited[src] = false;
 }
-
+/*
+For a given path, find the throughput of the network on that path
+@param path A vector of integers containing the nodes along the path
+@reuturn int The throughput value of the path
+*/
 int MaxThroughput::findThroughputForPath(vector<int> path)
 {
     int maxThroughput = INT32_MAX;
 
-    for (int i = 0; i < path.size() - 1; i++ )
+    for (int i = 0; i < path.size() - 1; i++)
     {
-        maxThroughput = min(maxThroughput, adj[path[i]][path[i+1]]);;
+        maxThroughput = min(maxThroughput, adj[path[i]][path[i + 1]]);
+        ;
     }
 
     return maxThroughput;
 }
-
+/*
+Computes the optimal path for the network given the calculated throughput/path values. It then
+prints the optimal path from source to destination node and max throughput.
+@param fileName The name of the file for the network
+@param src The source node to start from
+@param dest The destination node to reach
+@return Nothing
+*/
 void MaxThroughput::printOptimalPath(string fileName, int src, int dest)
 {
     loadData(fileName);
@@ -121,7 +157,6 @@ void MaxThroughput::printOptimalPath(string fileName, int src, int dest)
         }
     }
 
-
     cout << "Optimal path to reach router " << dest << " from router " << src << ":" << endl;
 
     for (int i = 0; i < ans.size(); i++)
@@ -132,9 +167,8 @@ void MaxThroughput::printOptimalPath(string fileName, int src, int dest)
         }
         else
         {
-            cout << ans[i] <<endl;
+            cout << ans[i] << endl;
         }
-        
     }
     cout << "Max throughput achieved: " << currMaxThroughput << " bits / second" << endl;
 }
