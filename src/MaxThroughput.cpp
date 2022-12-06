@@ -1,5 +1,5 @@
-#include "MaxThroughput.hpp"
-
+#include <cmath>
+#include "../include/MaxThroughput.hpp"
 using namespace std;
 
 /*
@@ -38,42 +38,45 @@ void MaxThroughput::loadData(string fileName)
 
     if (!myFile)
     {
-        cout << "Error opening file" << endl;
+        cerr << "Error opening file\n";
         return;
     }
 
-    int vertA, vertB, bandwidth, queueDelay;
+    Node node;
 
     while (!myFile.eof())
     {
 
         getline(myFile, line);
-        if (myFile >> vertA >> vertB >> bandwidth >> queueDelay)
+        if (myFile >> node.src >> node.dest >> node.bandwidth >> node.queueDelay >> node.nodeProcDelay)
         {
-            vector<int> currLine{vertA, vertB, bandwidth, queueDelay};
-            paths.push_back(currLine);
+            paths.push_back(node);
         }
     }
 
     myFile.close();
 }
 /*
-This function calculates the max throughput for the given network
+This function calculates the max throughput for the given network considering
+transmission delay, nodal processing delay, and queueing delay.
 @return Nothing
 */
 void MaxThroughput::calculateThroughput()
 {
     for (int i = 0; i < paths.size(); i++)
     {
-        double delay = paths[i][3] * ((totalBits / paths[i][2]) - 1);
+        // round the total number of packets up. dont truncate 2.5 packets to 2.
+        int numPackets = std::round(double(totalBits) / double(paths[i].bandwidth));
 
-        double totalTimeToSendBits = (totalBits / paths[i][2]) + delay;
+        int delay = paths[i].queueDelay * (numPackets - 1);
 
-        double throughput = totalBits / totalTimeToSendBits;
+        int nodeProcDelay = paths[i].nodeProcDelay * numPackets;
+        // numPackets is the same as the transmission delay here
+        int totalTimeToSendBits = numPackets + nodeProcDelay + delay;
 
-        paths[i].push_back(int(throughput));
+        int throughput = totalBits / totalTimeToSendBits;
 
-        adj[paths[i][0]][paths[i][1]] = paths[i][4];
+        adj[paths[i].src][paths[i].dest] = throughput;
     }
 }
 /*
@@ -124,7 +127,6 @@ int MaxThroughput::findThroughputForPath(vector<int> path)
     for (int i = 0; i < path.size() - 1; i++)
     {
         maxThroughput = min(maxThroughput, adj[path[i]][path[i + 1]]);
-        ;
     }
 
     return maxThroughput;
