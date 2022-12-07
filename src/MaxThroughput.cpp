@@ -80,7 +80,7 @@ void MaxThroughput::calculateThroughput()
     }
 }
 /*
-Traverses the network of nodes and finds all the paths using breadth first search
+Traverses the network of nodes and finds all the paths using depth first search
 @param src The source node to begin searching from
 @param dest The destination node that we want to reach
 @param index The current position in the network
