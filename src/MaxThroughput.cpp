@@ -1,4 +1,5 @@
 #include <cmath>
+#include <iomanip>
 #include "../include/MaxThroughput.hpp"
 using namespace std;
 
@@ -8,21 +9,16 @@ Constructor for the class. Initialize all the class members.
 @param biss Number of bits
 @return Nothing
 */
-MaxThroughput::MaxThroughput(int n, int bits) : adj{}, numNodes(n), totalBits(bits)
+MaxThroughput::MaxThroughput(int n, int bits) : numNodes(n), adj{}, totalBits(bits)
 {
-    visited = new bool[numNodes];
-    path = new int[numNodes];
-
-    for (int i = 0; i < numNodes; i++)
-    {
-        visited[i] = false;
-    }
+    visited = new bool[numNodes]{};
+    path = new int[numNodes]{};
 }
 /*
 Destructor
 @return Nothing
 */
-MaxThroughput::~MaxThroughput() 
+MaxThroughput::~MaxThroughput()
 {
     delete[] visited;
     delete[] path;
