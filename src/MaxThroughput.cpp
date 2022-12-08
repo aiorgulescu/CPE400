@@ -8,10 +8,8 @@ Constructor for the class. Initialize all the class members.
 @param biss Number of bits
 @return Nothing
 */
-MaxThroughput::MaxThroughput(int n, int bits)
+MaxThroughput::MaxThroughput(int n, int bits) : adj{}, numNodes(n), totalBits(bits)
 {
-    numNodes = n;
-    totalBits = bits;
     visited = new bool[numNodes];
     path = new int[numNodes];
 
@@ -24,7 +22,11 @@ MaxThroughput::MaxThroughput(int n, int bits)
 Destructor
 @return Nothing
 */
-MaxThroughput::~MaxThroughput() {}
+MaxThroughput::~MaxThroughput() 
+{
+    delete[] visited;
+    delete[] path;
+}
 /*
 Load the file data that contains the adjacency matrix and other network data
 @param fileName The name of the file to load

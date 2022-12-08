@@ -24,7 +24,7 @@ private:
     int numNodes;
     bool *visited;
     int *path;
-    int adj[MAX_SIZE][MAX_SIZE] = {0};
+    int adj[MAX_SIZE][MAX_SIZE];
     std::vector<Node> paths;
     std::vector<std::vector<int> > allPossiblePaths;
     int totalBits;
