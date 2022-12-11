@@ -112,7 +112,7 @@ void MaxThroughput::findAllPaths(int src, int dest, int index)
     }
 
     index--;
-    visited[dest] = false;
+    visited[src] = false;
 }
 /*
 For a given path, find the throughput of the network on that path
