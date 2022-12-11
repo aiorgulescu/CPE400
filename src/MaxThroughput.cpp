@@ -69,22 +69,13 @@ void MaxThroughput::calculateThroughput()
         int delay = paths[i].queueDelay * (numPackets - 1);
 
         int nodeProcDelay = paths[i].nodeProcDelay * numPackets;
-        
+
         // numPackets is the same as the transmission delay here
         int totalTimeToSendBits = numPackets + nodeProcDelay + delay;
 
         int throughput = totalBits / totalTimeToSendBits;
 
         adj[paths[i].src][paths[i].dest] = throughput;
-    }
-
-    for (int i = 0; i < numNodes; i++)
-    {
-        for (int j = 0; j < numNodes; j++)
-        {
-            cout << adj[i][j] << " ";
-        }
-        cout << endl;
     }
 }
 /*
