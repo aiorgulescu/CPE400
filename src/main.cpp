@@ -12,7 +12,14 @@ int main()
 
     MaxThroughput simulation(4, 200);
 
-    simulation.printOptimalPath("../data/network.txt", 0, 3);
+    try
+    {
+        simulation.printOptimalPath("../data/network.txt", 0, 3);
+    }
+    catch (const std::exception &e)
+    {
+        cerr << e.what() << '\n';
+    }
 
     return 0;
 }

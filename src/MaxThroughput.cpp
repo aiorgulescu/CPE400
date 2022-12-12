@@ -36,8 +36,7 @@ void MaxThroughput::loadData(string fileName)
 
     if (!myFile)
     {
-        cerr << "Error opening file\n";
-        return;
+        throw runtime_error("Error opening the file");
     }
 
     Node node;
